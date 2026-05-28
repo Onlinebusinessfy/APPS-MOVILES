@@ -1,9 +1,23 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Home</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>TaskMaster Lite</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-item>
+    <ion-label position="stacked">Nueva Tarea</ion-label>
+    <ion-input [(ngModel)]="newTaskStr" placeholder="Ejem: Estudiar typescript"></ion-input>
+  </ion-item>
+  <ion-button expand="block" color="success" (click)="addTask()">Agregar Tarea</ion-button>
 
+  <ion-list>
+    @for(tarea of tasks; track tarea.title) {
+      <ion-item>
+        <ion-label>
+          {{tarea.title}}
+        </ion-label>
+      </ion-item>
+    } 
+  </ion-list>
 </ion-content>

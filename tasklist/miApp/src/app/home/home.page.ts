@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonButton, IonInput, IonList} from '@ionic/angular/standalone';
 import { Task } from '../models/task.models';
 
 @Component({
@@ -9,24 +9,26 @@ import { Task } from '../models/task.models';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonButton, IonInput, IonList, CommonModule, FormsModule]
 })
 export class HomePage implements OnInit {
+
+  newTaskStr: string = '';
 
   tasks: Task[] = [
     {
       id: 1,
-      titulo: "Configuración de Ionic",
-      descripcion: "Instalar Node.js, AngularCli, Ionic",
-      finalizado: true,
-      proridad: "Alta"
+      title: "Configuración de Ionic",
+      description: "Instalar Node.js, AngularCli, Ionic",
+      completed: true,
+      priority: "High"
     },
     {
       id: 2,
-      titulo: "Crear app tasklist",
-      descripcion: "Crear el proyecto inicial de Ionic con Angular",
-      finalizado: false,
-      proridad: "Media"
+      title: "Crear app tasklist",
+      description: "Crear el proyecto inicial de Ionic con Angular",
+      completed: false,
+      priority: "Medium"
     }
   ];
 
@@ -39,6 +41,20 @@ export class HomePage implements OnInit {
 
   saludar() {
     console.log("¡Hola, Ionic!");
+  }
+
+  addTask() {
+    console.log(this.newTaskStr);
+    const newTask: Task = {
+      id: Date.now(),
+      title: this.newTaskStr,
+      description: '',
+      completed: false,
+      priority: 'Medium'
+    }
+    this.tasks.push(newTask);
+    this.newTaskStr = '';
+    console.log(this.tasks);
   }
 
 }
