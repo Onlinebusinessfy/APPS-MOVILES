@@ -45,9 +45,25 @@ export class HomePage implements OnInit {
 
   addTask() {
     console.log(this.newTaskStr);
+
+    const title = this.newTaskStr.trim();
+
+    if (!title) {
+      alert('El título no puede estar vacío');
+      return;
+    }
+    const existe = this.tasks.some(
+      task => task.title.trim().toLowerCase() === title.toLowerCase()
+    );
+
+    if (existe) {
+      alert('Ya existe una tarea con ese título');
+      return;
+    }
+
     const newTask: Task = {
       id: Date.now(),
-      title: this.newTaskStr,
+      title: title,
       description: '',
       completed: false,
       priority: 'Medium'
