@@ -1,0 +1,14 @@
+ion-item-options {
+  ion-item-option {
+    min-width: 80px;
+  }
+}
+
+.delete-option {
+  --color: #ffffff;
+  --background: #eb445a;
+}
+
+.delete-option ion-icon {
+  color: #ffffff;
+}
