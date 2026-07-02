@@ -1,0 +1,102 @@
+ion-card {
+  margin: 12px 0;
+  border-radius: 18px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+ion-card-content {
+  padding: 10px 12px;
+}
+
+.pokemon-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+}
+
+.pokemon-image-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 72px;
+}
+
+.pokemon-image {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+}
+
+.pokemon-name-col {
+  flex: 0 0 35%;
+  min-width: 120px;
+}
+
+.pokemon-types-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.pokemon-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.pokemon-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.type-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  min-width: 0;
+}
+
+.type-list span {
+  flex-shrink: 0;
+}
+
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: white;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.16);
+}
+
+.type-normal { background: #a8a77a; }
+.type-fire { background: #ee8130; }
+.type-water { background: #6390f0; }
+.type-electric { background: #f7d02c; color: #3f2d00; }
+.type-grass { background: #7ac74c; }
+.type-ice { background: #96d9d6; color: #0f2f2e; }
+.type-fighting { background: #c22e28; }
+.type-poison { background: #a33ea1; }
+.type-ground { background: #e2bf65; color: #3f2d00; }
+.type-flying { background: #a98ff3; }
+.type-psychic { background: #f95587; }
+.type-bug { background: #a6b91a; }
+.type-rock { background: #b6a136; }
+.type-ghost { background: #735797; }
+.type-dragon { background: #6f35fc; }
+.type-dark { background: #705746; }
+.type-steel { background: #b7b7ce; color: #2f2f3f; }
+.type-fairy { background: #d685ad; }

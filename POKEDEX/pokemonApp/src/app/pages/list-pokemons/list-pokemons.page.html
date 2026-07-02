@@ -1,0 +1,34 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>PokeDex</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    @for(pokemon of pokemons; track pokemon){
+      <ion-card>
+        <ion-card-content>
+          <div class="pokemon-row">
+            <div class="pokemon-image-col">
+              <ion-img class="pokemon-image" [src]="pokemon.sprite" [alt]="pokemon.name"></ion-img>
+            </div>
+            <div class="pokemon-name-col">
+              <ion-text class="pokemon-name ion-text-capitalize">{{ pokemon.name }}</ion-text>
+            </div>
+            <div class="pokemon-types-col">
+              <div class="type-list">
+                @if(pokemon.type1){
+                  <span [class]="getTypeClass(pokemon.type1)">{{ pokemon.type1 }}</span>
+                }
+                @if(pokemon.type2){
+                  <span [class]="getTypeClass(pokemon.type2)">{{ pokemon.type2 }}</span>
+                }
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    }
+  </ion-grid>
+</ion-content>
