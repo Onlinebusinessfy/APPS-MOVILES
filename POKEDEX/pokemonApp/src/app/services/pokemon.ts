@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CapacitorHttp } from '@capacitor/core';
+import { CapacitorHttp, HttpResponse } from '@capacitor/core';
 import { IPokemon } from '../interfaces/pokemon';
 
 @Injectable({
@@ -9,27 +9,48 @@ export class SPokemon {
 
   private readonly URL_BASE = 'https://pokeapi.co/api/v2/pokemon';
   private nextUrl = `${this.URL_BASE}?limit=20&offset=0`;
+  private hasMore = true;
 
   constructor() { }
 
+  resetPagination() {
+    this.nextUrl = `${this.URL_BASE}?limit=20&offset=0`;
+    this.hasMore = true;
+  }
+
+  get hasMorePokemons(): boolean {
+    return this.hasMore;
+  }
+
+  getPokemon(id: number){
+    //se va a formar una ruta como:
+    // https://pokeapi.co/api/v2/pokemon/:id
+    const ruta= `${this.URL_BASE}/${id}`;
+    return CapacitorHttp.get({url:ruta, params:{}})
+    .then((resp:HttpResponse) => this.processPokemon(resp.data));
+  }
+
   async getPokemons(): Promise<IPokemon[]> {
+
+    if (!this.nextUrl) {
+      this.hasMore = false;
+      return [];
+    }
 
     try {
 
       const response = await fetch(this.nextUrl);
       const data = await response.json();
 
-      console.log("FETCH OK:", data);
-
       if (!data || !data.results) {
+        this.hasMore = false;
         return [];
       }
 
       const pokemons: IPokemon[] = [];
       const result: any[] = data.results;
       this.nextUrl = data.next;
-
-      console.log("RESPUESTA API:", response);
+      this.hasMore = Boolean(data.next);
 
       const promises = result.map((p: any) =>
         CapacitorHttp.get({ url: p.url })
@@ -41,12 +62,11 @@ export class SPokemon {
         pokemons.push(this.processPokemon(res.data));
       }
 
-      console.log("POKEMONS FINAL:", pokemons);
-
       return pokemons;
 
     } catch (error) {
       console.error("ERROR getPokemons:", error);
+      this.hasMore = false;
       return [];
     }
   }

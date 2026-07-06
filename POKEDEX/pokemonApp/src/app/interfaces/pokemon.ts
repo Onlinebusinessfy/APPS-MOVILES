@@ -8,7 +8,7 @@ export interface IPokemon {
   sprite: string;
   height: string;
   weight: string;
-  abilities: string;
+  abilities: string[];
   hiddenAbility?: string;
   stats: Istats[];
 }

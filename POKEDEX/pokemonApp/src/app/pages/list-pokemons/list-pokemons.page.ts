@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonImg, IonText, LoadingController } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonImg, IonText, IonInfiniteScroll, IonInfiniteScrollContent, LoadingController, InfiniteScrollCustomEvent } from '@ionic/angular/standalone';
 import { SPokemon } from '../../services/pokemon';
 import { Router } from '@angular/router';
 import { IPokemon } from '../../interfaces/pokemon';
@@ -11,46 +11,70 @@ import { IPokemon } from '../../interfaces/pokemon';
   templateUrl: './list-pokemons.page.html',
   styleUrls: ['./list-pokemons.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonImg, IonText, CommonModule, FormsModule]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonImg, IonText, IonInfiniteScroll, IonInfiniteScrollContent, CommonModule, FormsModule]
 })
 export class ListPokemonsPage implements OnInit {
 
   private pokemonService: SPokemon = inject(SPokemon);
-  private router: Router = inject(Router);
+  //Inyección de la dependencia, no olvidar importarlo
   private loadingCtroller: LoadingController = inject(LoadingController);
+  
+  //Inyectar la dependencia
+  private router: Router = inject(Router);
 
   //variable para almacenar todos los poquemos en pantalla
   pokemons: IPokemon[] = [];
+  isLoading = false;
+  hasMorePokemons = true;
 
   constructor() { }
 
-  ngOnInit() {
-    this.getMorePokemons();
+  goToPage(pokemon: IPokemon) {
+    this.router.navigate(['/detail-pokemon', pokemon.id]);
   }
 
-  async getMorePokemons() {
-    //constante para almacenar la promesa
-    const promisePokemons = this.pokemonService.getPokemons();
+  ngOnInit() {
+    this.pokemonService.resetPagination();
+    void this.getMorePokemons();
+  }
 
-    if (promisePokemons) {//validando que no sea null
-      //se crea el controlador para el ion-loading
-      const loading = await this.loadingCtroller.create({
-        message: 'Cargando...',
+  async getMorePokemons(event?: InfiniteScrollCustomEvent) {
+    if (this.isLoading || !this.hasMorePokemons) {
+      return;
+    }
+
+    this.isLoading = true;
+
+    let loading: any;
+
+    if (!event) {
+      loading = await this.loadingCtroller.create({
+        message: 'Cargando...'
       });
-      loading.present();//hace que se muestre el loading
-      //Se manda llamar la promesa
-      promisePokemons.then((pokemons: any) => {
-        //El nuevo arreglo de pokemons obtenidos, se
-        //concatena con el de la clase interna
-        //es decir, los que estaban, mas los nuevos
+      await loading.present();
+    }
+
+    try {
+      const pokemons = await this.pokemonService.getPokemons();
+
+      if (pokemons.length > 0) {
         this.pokemons = this.pokemons.concat(pokemons);
-      })
-      .catch((error) => console.log(error))//Si ocurre un error
-      .finally(() => {
-        //Bloque que se ejecuta al completar o al tener error
-        //asegura que el loading cierre
-        loading.dismiss();//cierra el loading
-      });
+      }
+
+      this.hasMorePokemons = this.pokemonService.hasMorePokemons;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      if (event) {
+        event.target.complete();
+        if (!this.hasMorePokemons) {
+          event.target.disabled = true;
+        }
+      } else if (loading) {
+        await loading.dismiss();
+      }
+
+      this.isLoading = false;
     }
   }
 
